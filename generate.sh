@@ -19,7 +19,7 @@ CERTS_DIR=$3
 NGINX_CONTAINER=$4
 
 LETSENCRYPT_DIR=./letsencrypt
-CLOUDFLARE_PROPAGATION_DURATION=20
+CLOUDFLARE_PROPAGATION_DURATION=30
 
 ###############################################################
 # Verify settings
@@ -54,6 +54,7 @@ docker run -it --rm \
     --dns-cloudflare-propagation-seconds ${CLOUDFLARE_PROPAGATION_DURATION} \
     --cert-name ${DOMAIN} \
     -m "${EMAIL}" \
+    -d "${DOMAIN}" \
     -d "*.${DOMAIN}"
 
 GENERATED_CERTS_DIR=${LETSENCRYPT_DIR}/archive/${DOMAIN}
