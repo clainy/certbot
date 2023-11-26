@@ -18,7 +18,8 @@ EMAIL=$2
 CERTS_DIR=$3
 NGINX_CONTAINER=$4
 
-LETSENCRYPT_DIR=./letsencrypt
+BASE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+LETSENCRYPT_DIR=${BASE_DIR}/letsencrypt
 CLOUDFLARE_PROPAGATION_DURATION=30
 
 ###############################################################
