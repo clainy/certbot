@@ -34,12 +34,27 @@ if [ ! -f "${CLOUDFLARE_CONFIG}" ]; then
     read -e -p "Please enter your Cloudflare TOKEN: " CLOUDFLARE_TOKEN
     echo "dns_cloudflare_api_token=${CLOUDFLARE_TOKEN}" > ${CLOUDFLARE_CONFIG}
 
-    exit
+#    exit
 fi
 
 ###############################################################
 # Certbot generating SSL certificates
 ###############################################################
+
+if [ -z "${DOMAIN}" ] || [ -z "${EMAIL}" ] || [ ! -d "${CERTS_DIR}" ]; then
+  if [ -z "${DOMAIN}" ]; then
+    echo "Domain is missing"
+  elif [ -z "${EMAIL}" ]; then
+    echo "Contact email is missing"
+  else
+    echo "Certificates directory is not accessible or not exist"
+  fi
+
+  echo "Usage  : sudo ./generate.sh YOUR_DOMAIN YOUR_EMAIL NGINX_CERTS_DIRECTORY [CONTAINER_NAME]"
+  echo "Example: sudo ./generate.sh example.com email@example.com /etc/nginx/certs nginx"
+
+  exit
+fi
 
 echo "Generate/renew SSL certificates for *.${DOMAIN} ..."
 
@@ -77,10 +92,10 @@ echo "SSL certificates have been successfully renewed."
 echo "Updating NGNIX cert and key:"
 
 echo "    ${CERTS_DIR}/${DOMAIN}.crt"
-cp -p ${CERT_CHAIN_FILE} ${CERTS_DIR}/${DOMAIN}.crt
+cp -pf "${CERT_CHAIN_FILE}" "${CERTS_DIR}/${DOMAIN}".crt
 
 echo "    ${CERTS_DIR}/${DOMAIN}.key"
-cp -p ${CERT_KEY_FILE} ${CERTS_DIR}/${DOMAIN}.key
+cp -pf "${CERT_KEY_FILE}" "${CERTS_DIR}/${DOMAIN}".key
 
 ###############################################################
 # Restart NGINX services
@@ -89,6 +104,6 @@ cp -p ${CERT_KEY_FILE} ${CERTS_DIR}/${DOMAIN}.key
 if [ "${NGINX_CONTAINER}" ] && [ "$(docker ps -a -q -f name=${NGINX_CONTAINER})" ]; then
     # Reload Nginx in another container
     # Send a signal to the Nginx container to reload its configuration
-    docker exec -it $NGINX_CONTAINER nginx -s reload
+    docker exec -it "$NGINX_CONTAINER" nginx -s reload
     echo "Nginx configuration reloaded."
 fi
