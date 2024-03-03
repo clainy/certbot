@@ -1,4 +1,4 @@
 .idea
-
+cloudflare.ini
 letsencrypt/*
 !letsencrypt/cloudflare.ini.example
