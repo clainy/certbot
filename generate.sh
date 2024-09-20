@@ -73,9 +73,9 @@ docker run -it --rm \
     -d "${DOMAIN}" \
     -d "*.${DOMAIN}"
 
-GENERATED_CERTS_DIR=${LETSENCRYPT_DIR}/archive/${DOMAIN}
-CERT_CHAIN_FILE=${GENERATED_CERTS_DIR}/fullchain1.pem
-CERT_KEY_FILE=${GENERATED_CERTS_DIR}/privkey1.pem
+GENERATED_CERTS_DIR=${LETSENCRYPT_DIR}/live/${DOMAIN}
+CERT_CHAIN_FILE=${GENERATED_CERTS_DIR}/fullchain.pem
+CERT_KEY_FILE=${GENERATED_CERTS_DIR}/privkey.pem
 
 if [ ! -f "${CERT_CHAIN_FILE}" ] || [ ! -f "${CERT_KEY_FILE}" ]; then
     echo "Failed to generate SSL certificates."
