@@ -8,7 +8,7 @@
 #    e.g. `sudo ./generate.sh example.com email@example.com /etc/nginx/certs nginx`
 
 if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root."
+    echo "This script must be run as root."
 
     exit
 fi
@@ -58,7 +58,7 @@ fi
 
 echo "Generate/renew SSL certificates for *.${DOMAIN} ..."
 
-docker run -it --rm \
+docker run -t --rm \
   --name certbot \
   -v "${LETSENCRYPT_DIR}:/etc/letsencrypt" \
   certbot/dns-cloudflare \
