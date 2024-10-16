@@ -64,6 +64,24 @@ create_certs_conf() {
   fi
 }
 
+# Function to add script to cron jobs
+add_to_cron() {
+  # can add cron job manually as:
+  # 1. sudo crontab -e
+  # 2. echo "0 7 * * 0 /path/to/your/script.sh" | sudo crontab -
+  CRON_JOB="0 7 * * 0 /path/to/your/script.sh"
+  
+  # Check if the cron job already exists
+  if ! crontab -l | grep -q "generate-certs.sh"; then
+    read -p "Do you want to check certs 7AM every Sunday? (y/n): " ADD_CRON
+
+    if [[ "$ADD_CRON" == "y" || "$ADD_CRON" == "Y" ]]; then
+      (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+      echo "Cron job added to run the script every Sunday at 7:00 AM."
+    fi
+  fi
+}
+
 # Main function to call other functions
 main() {
   check_root
