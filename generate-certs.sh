@@ -20,8 +20,9 @@ check_root() {
 
 # Function to read the certs.conf file
 read_config() {
-  echo "Check certbot config file..."  
+  echo "Check certbot config file..."
   ./init.sh
+  echo ""
 
   if [[ ! -f "$CONFIG_FILE" ]]; then
     echo "certs.conf file not found!"
@@ -32,7 +33,7 @@ read_config() {
   while IFS= read -r line; do
     # Skip empty lines and lines starting with comments
     [[ -z "$line" || "$line" =~ ^\# ]] && continue
-    
+
     # If a new section starts, reset variables
     if [[ "$line" =~ ^\[(.*)\]$ ]]; then
       DOMAIN=""
@@ -66,6 +67,8 @@ trigger_generate() {
 main() {
   check_root
   read_config
+
+  echo ""
 }
 
 # Execute the main function
