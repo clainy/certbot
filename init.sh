@@ -10,11 +10,10 @@ check_root() {
 
 #BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 BASE_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
-LETSENCRYPT_DIR=${BASE_DIR}/letsencrypt
 
 # Create cloudflare.ini file if it doesn't exist and prompt for token
 create_cloudflare_ini() {
-  INI_FILE="$BASE_DIR/letsencrypt/cloudflare.ini"
+  INI_FILE="$BASE_DIR/cloudflare.ini"
   
   # Create directory if it doesn't exist
   mkdir -p "$(dirname "$INI_FILE")"

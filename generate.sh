@@ -19,14 +19,16 @@ CERTS_DIR=$3
 NGINX_CONTAINER=$4
 
 BASE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-LETSENCRYPT_DIR=${BASE_DIR}/letsencrypt
+
+CERTBOT_DATA_ROOT=/app/data/certbot
+LETSENCRYPT_DIR=${CERTBOT_DATA_ROOT}/letsencrypt
 CLOUDFLARE_PROPAGATION_DURATION=30
 
 ###############################################################
 # Verify settings
 ###############################################################
 
-CLOUDFLARE_CONFIG=${LETSENCRYPT_DIR}/cloudflare.ini
+CLOUDFLARE_CONFIG=${BASE_DIR}/cloudflare.ini
 
 if [ ! -f "${CLOUDFLARE_CONFIG}" ]; then
     echo "Cloudflare configuration not found."

@@ -15,3 +15,9 @@ sudo ./generate.sh example.com email@example.com /etc/nginx/certs
 ```sh
 sudo ./generate-certs.sh
 ```
+
+### Automate Renew
+```
+# Check certs and renew them at 3:00am every Monday
+0 3 * * 1 /bin/bash /app/certbot/generate-certs.sh
+```
