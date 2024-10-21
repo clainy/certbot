@@ -56,7 +56,7 @@ trigger_generate() {
   DOMAIN="$1"
   EMAIL="$2"
   if [[ -n "$DOMAIN" && -n "$EMAIL" ]]; then
-    echo ">>> Generating certificate for$DOMAIN"
+    echo ">>> Generating certificate for $DOMAIN"
     $CERTBOT_SCRIPT "$DOMAIN" "$EMAIL" "$CERTS_DIR"
   else
     echo "Missing domain or email for a section; skipping."

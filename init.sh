@@ -14,10 +14,10 @@ BASE_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
 # Create cloudflare.ini file if it doesn't exist and prompt for token
 create_cloudflare_ini() {
   INI_FILE="$BASE_DIR/cloudflare.ini"
-  
+
   # Create directory if it doesn't exist
   mkdir -p "$(dirname "$INI_FILE")"
-  
+
   if [[ ! -f "$INI_FILE" ]]; then
     echo "Cloudflare token file not found. Creating cloudflare.ini..."
     read -sp "Enter your Cloudflare API token: " TOKEN
@@ -33,28 +33,28 @@ create_cloudflare_ini() {
 # Create certs.conf if it doesn't exist and prompt for domain and email
 create_certs_conf() {
   CERTS_FILE="certs.conf"
-  
+
   if [[ ! -f "$CERTS_FILE" ]]; then
     echo "certs.conf file not found. Creating certs.conf..."
-    
+
     # Open file descriptor for writing
     exec 3> "$CERTS_FILE"
-    
+
     # Gather multiple domain-email pairs
     COUNTER=1
     while true; do
       read -p "Enter domain for cert$COUNTER (or press Enter to finish): " DOMAIN
       [[ -z "$DOMAIN" ]] && break  # Stop when input is empty
-      
+
       read -p "Enter email for cert$COUNTER: " EMAIL
       echo "[cert$COUNTER]" >&3
       echo "domain=$DOMAIN" >&3
       echo "email=$EMAIL" >&3
       echo "" >&3
-      
+
       ((COUNTER++))
     done
-    
+
     # Close file descriptor
     exec 3>&-
     echo "certs.conf created with the provided domain-email pairs."
@@ -69,7 +69,7 @@ add_to_cron() {
   # 1. sudo crontab -e
   # 2. echo "0 7 * * 0 /path/to/your/script.sh" | sudo crontab -
   CRON_JOB="0 7 * * 0 /path/to/your/script.sh"
-  
+
   # Check if the cron job already exists
   if ! crontab -l | grep -q "generate-certs.sh"; then
     read -p "Do you want to check certs 7AM every Sunday? (y/n): " ADD_CRON
