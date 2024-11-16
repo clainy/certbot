@@ -18,6 +18,6 @@ sudo ./generate-certs.sh
 
 ### Automate Renew
 ```
-# Check certs and renew them at 3:00am every Monday
-0 3 * * 1 /bin/bash /app/certbot/generate-certs.sh
+# Check certs and renew them at 7:00am every Sunday
+0 7 * * 0 /bin/bash /app/certbot/generate-certs.sh
 ```

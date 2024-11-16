@@ -20,6 +20,8 @@ NGINX_CONTAINER=$4
 
 BASE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+source "$BASE_DIR/functions.sh"
+
 CERTBOT_DATA_ROOT=/app/data/certbot
 LETSENCRYPT_DIR=${CERTBOT_DATA_ROOT}/letsencrypt
 CLOUDFLARE_PROPAGATION_DURATION=30
@@ -93,11 +95,21 @@ echo "SSL certificates have been successfully renewed."
 
 echo "Updating NGNIX cert and key:"
 
+CERT_CONTENT_OLD=$(cat "${CERTS_DIR}/${DOMAIN}.crt")
+CERT_CONTENT_NEW=$(cat "${CERT_CHAIN_FILE}")
+
+if diff -q "${CERTS_DIR}/${DOMAIN}.crt" "${CERT_CHAIN_FILE}"; then
+    #send_notification "Renew ${DOMAIN} certs: Skip"
+    echo "Renew ${DOMAIN} certs: Skip"
+else
+    send_notification "Renew ${DOMAIN} certs: Updated"
+fi
+
 echo "    ${CERTS_DIR}/${DOMAIN}.crt"
-cp -pf "${CERT_CHAIN_FILE}" "${CERTS_DIR}/${DOMAIN}".crt
+cp -pf "${CERT_CHAIN_FILE}" "${CERTS_DIR}/${DOMAIN}.crt"
 
 echo "    ${CERTS_DIR}/${DOMAIN}.key"
-cp -pf "${CERT_KEY_FILE}" "${CERTS_DIR}/${DOMAIN}".key
+cp -pf "${CERT_KEY_FILE}" "${CERTS_DIR}/${DOMAIN}.key"
 
 ###############################################################
 # Restart NGINX services
