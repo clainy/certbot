@@ -13,8 +13,6 @@ CONFIG_FILE=$BASE_DIR/certs.conf
 # Load common functions
 source $BASE_DIR/functions.sh
 
-send_notification "generate-certs checking"
-
 # Function to check if the script is running as root
 check_root() {
   if [[ "$EUID" -ne 0 ]]; then
@@ -50,7 +48,6 @@ read_config() {
     elif [[ "$line" =~ ^email= ]]; then
       EMAIL="${line#*=}"
 
-      echo "Check $DOMAIN $EMAIL"
       trigger_generate "$DOMAIN" "$EMAIL" # Trigger generate.sh once both values are available
     fi
   done < "$CONFIG_FILE"
