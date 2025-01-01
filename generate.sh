@@ -65,6 +65,7 @@ echo "Generate/renew SSL certificates for *.${DOMAIN} ..."
 docker run -t --rm \
   --name certbot \
   -v "${LETSENCRYPT_DIR}:/etc/letsencrypt" \
+  -v "${CLOUDFLARE_CONFIG}:/etc/letsencrypt/cloudflare.ini" \
   certbot/dns-cloudflare \
   certonly --dns-cloudflare \
     --non-interactive \

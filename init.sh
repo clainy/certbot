@@ -13,7 +13,7 @@ BASE_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
 
 # Create cloudflare.ini file if it doesn't exist and prompt for token
 create_cloudflare_ini() {
-  INI_FILE="$BASE_DIR/cloudflare.ini"
+  local INI_FILE="$BASE_DIR/cloudflare.ini"
 
   # Create directory if it doesn't exist
   mkdir -p "$(dirname "$INI_FILE")"
@@ -32,7 +32,7 @@ create_cloudflare_ini() {
 
 # Create certs.conf if it doesn't exist and prompt for domain and email
 create_certs_conf() {
-  CERTS_FILE="certs.conf"
+  local CERTS_FILE="$BASE_DIR/certs.conf"
 
   if [[ ! -f "$CERTS_FILE" ]]; then
     echo "certs.conf file not found. Creating certs.conf..."
@@ -41,7 +41,7 @@ create_certs_conf() {
     exec 3> "$CERTS_FILE"
 
     # Gather multiple domain-email pairs
-    COUNTER=1
+    local COUNTER=1
     while true; do
       read -p "Enter domain for cert$COUNTER (or press Enter to finish): " DOMAIN
       [[ -z "$DOMAIN" ]] && break  # Stop when input is empty
@@ -68,7 +68,7 @@ add_to_cron() {
   # can add cron job manually as:
   # 1. sudo crontab -e
   # 2. echo "0 7 * * 0 /path/to/your/script.sh" | sudo crontab -
-  CRON_JOB="0 7 * * 0 /path/to/your/script.sh"
+  local CRON_JOB="0 7 * * 0 /path/to/your/script.sh"
 
   # Check if the cron job already exists
   if ! crontab -l | grep -q "generate-certs.sh"; then

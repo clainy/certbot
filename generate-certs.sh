@@ -8,7 +8,12 @@ CERTBOT_SCRIPT=$BASE_DIR/generate.sh
 CERTS_DIR=$DATA_ROOT/certs
 
 # Set default config file
-CONFIG_FILE="$BASE_DIR/certs.conf"
+CONFIG_FILE=$BASE_DIR/certs.conf
+
+# Load common functions
+source $BASE_DIR/functions.sh
+
+send_notification "generate-certs checking"
 
 # Function to check if the script is running as root
 check_root() {
@@ -20,14 +25,12 @@ check_root() {
 
 # Function to read the certs.conf file
 read_config() {
-  echo "Check certbot config file..."
-  ./init.sh
-  echo ""
-
   if [[ ! -f "$CONFIG_FILE" ]]; then
     echo "certs.conf file not found!"
     exit 1
   fi
+
+  echo "Loading certs configurations: $CONFIG_FILE"
 
   # Parsing the certs.conf file for domain and email values
   while IFS= read -r line; do
@@ -46,15 +49,17 @@ read_config() {
       DOMAIN="${line#*=}"
     elif [[ "$line" =~ ^email= ]]; then
       EMAIL="${line#*=}"
+
+      echo "Check $DOMAIN $EMAIL"
       trigger_generate "$DOMAIN" "$EMAIL" # Trigger generate.sh once both values are available
     fi
-  done < "certs.conf"
+  done < "$CONFIG_FILE"
 }
 
 # Function to trigger the generate.sh script
 trigger_generate() {
-  DOMAIN="$1"
-  EMAIL="$2"
+  local DOMAIN="$1"
+  local EMAIL="$2"
   if [[ -n "$DOMAIN" && -n "$EMAIL" ]]; then
     echo ">>> Generating certificate for $DOMAIN"
     $CERTBOT_SCRIPT "$DOMAIN" "$EMAIL" "$CERTS_DIR"
@@ -65,7 +70,14 @@ trigger_generate() {
 
 # Main function
 main() {
+  # require to run as root user
   check_root
+
+  # require certs configuration setup properly
+  echo "Check certbot config file..."
+  $BASE_DIR/init.sh
+  echo ""
+
   read_config
 
   echo ""
