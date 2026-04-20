@@ -20,9 +20,10 @@ NGINX_CONTAINER=$4
 
 BASE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+source .env
 source "$BASE_DIR/functions.sh"
 
-CERTBOT_DATA_ROOT=/app/data/certbot
+CERTBOT_DATA_ROOT=$DATA_ROOT/certbot
 LETSENCRYPT_DIR=${CERTBOT_DATA_ROOT}/letsencrypt
 CLOUDFLARE_PROPAGATION_DURATION=30
 
@@ -51,7 +52,7 @@ if [ -z "${DOMAIN}" ] || [ -z "${EMAIL}" ] || [ ! -d "${CERTS_DIR}" ]; then
   elif [ -z "${EMAIL}" ]; then
     echo "Contact email is missing"
   else
-    echo "Certificates directory is not accessible or not exist"
+    echo "Certificates directory ${CERTS_DIR} is not accessible or not exist"
   fi
 
   echo "Usage  : sudo ./generate.sh YOUR_DOMAIN YOUR_EMAIL NGINX_CERTS_DIRECTORY [CONTAINER_NAME]"

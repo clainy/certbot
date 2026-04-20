@@ -3,15 +3,18 @@
 #BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 BASE_DIR=$( dirname -- "$( readlink -f -- "$0"; )"; )
 
-DATA_ROOT=/app/data
+if [ -f "$BASE_DIR/.env" ]; then
+  source "$BASE_DIR/.env"
+fi
+
+DATA_ROOT=$DATA_ROOT
 CERTBOT_SCRIPT=$BASE_DIR/generate.sh
 CERTS_DIR=$DATA_ROOT/certs
 
 # Set default config file
 CONFIG_FILE=$BASE_DIR/certs.conf
 
-# Load common functions
-source $BASE_DIR/functions.sh
+source "$BASE_DIR/functions.sh"
 
 # Function to check if the script is running as root
 check_root() {
